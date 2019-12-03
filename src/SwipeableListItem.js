@@ -98,14 +98,17 @@ class SwipeableListItem extends PureComponent {
 
       if (this.left < this.listElement.offsetWidth * threshold * -1) {
         this.handleSwipedLeft();
+        this.left = '-100%';
       } else if (this.left > this.listElement.offsetWidth * threshold) {
         this.handleSwipedRight();
+        this.left = '100%';
+      } else {
+        this.left = '-100%';
       }
     }
 
-    this.left = 0;
     this.listElement.className = styles.contentReturn;
-    this.listElement.style.transform = `translateX(${this.left}px)`;
+    this.listElement.style.transform = `translateX(${this.left})`;
 
     // hide backgrounds
     if (this.contentLeft) {
@@ -161,6 +164,7 @@ class SwipeableListItem extends PureComponent {
 
   updatePosition = () => {
     const { blockSwipe } = this.props;
+
     if (blockSwipe) {
       this.dragged = false;
     }
@@ -210,7 +214,6 @@ class SwipeableListItem extends PureComponent {
 
   handleSwipedRight = () => {
     const { swipeRight: { action } = {} } = this.props;
-
     if (action) {
       action();
     }
