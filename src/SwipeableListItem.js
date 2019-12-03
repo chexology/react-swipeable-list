@@ -103,7 +103,7 @@ class SwipeableListItem extends PureComponent {
         this.handleSwipedRight();
         this.left = '100%';
       } else {
-        this.left = '-100%';
+        this.left = '0px';
       }
     }
 
