@@ -184,6 +184,20 @@ class SwipeableListItem extends PureComponent {
         return;
       }
 
+      let transitionPoint = Math.floor(this.listElement.offsetWidth / 3);
+
+      if (contentToShow === this.contentRight) {
+        if (this.left >= transitionPoint) {
+          this.contentRight.childNodes[0].childNodes[0].style.transform = `translateX(${this
+            .left - transitionPoint}px)`;
+        }
+      } else {
+        if (this.left <= transitionPoint) {
+          this.contentLeft.childNodes[0].childNodes[0].style.transform = `translateX(${this
+            .left + transitionPoint}px)`;
+        }
+      }
+
       const opacity = (Math.abs(this.left) / 100).toFixed(2);
 
       this.listElement.style.transform = `translateX(${this.left}px)`;
