@@ -162,6 +162,32 @@ class SwipeableListItem extends PureComponent {
     }
   };
 
+  shiftContentToShowText = contentToShow => {
+    let position = Math.abs(this.left);
+    let transitionPoint = Math.floor(this.listElement.offsetWidth / 2);
+    let swipingRight = contentToShow === this.contentRight;
+    let text = swipingRight
+      ? this.contentRight.firstChild.firstChild
+      : this.contentLeft.firstChild.firstChild;
+    let swipeUnderThreshold =
+      position < transitionPoint &&
+      position < text.offsetWidth &&
+      position !== text.offsetWidth;
+    let swipeMeetsThreshold = position >= transitionPoint;
+
+    if (swipingRight) {
+      text.style.marginLeft = `-${text.offsetWidth}px`;
+      if (swipeUnderThreshold || swipeMeetsThreshold) {
+        text.style.transform = `translateX(${position}px)`;
+      }
+    } else {
+      text.style.marginRight = `-${text.offsetWidth}px`;
+      if (swipeUnderThreshold || swipeMeetsThreshold) {
+        text.style.transform = `translateX(${-position}px)`;
+      }
+    }
+  };
+
   updatePosition = () => {
     const { blockSwipe } = this.props;
 
@@ -184,19 +210,7 @@ class SwipeableListItem extends PureComponent {
         return;
       }
 
-      let transitionPoint = Math.floor(this.listElement.offsetWidth / 3);
-
-      if (contentToShow === this.contentRight) {
-        if (this.left >= transitionPoint) {
-          this.contentRight.childNodes[0].childNodes[0].style.transform = `translateX(${this
-            .left - transitionPoint}px)`;
-        }
-      } else {
-        if (this.left <= transitionPoint) {
-          this.contentLeft.childNodes[0].childNodes[0].style.transform = `translateX(${this
-            .left + transitionPoint}px)`;
-        }
-      }
+      this.shiftContentToShowText(contentToShow);
 
       const opacity = (Math.abs(this.left) / 100).toFixed(2);
 
